@@ -45,8 +45,21 @@ public class AboutChannel {
     public static void main(String[] args) throws IOException {
         copyFileByChannel();
         copyFileByMappedByteBuffer();
+        channelDataTrans();
     }
 
+    // 通道之间的数据传输（直接缓冲区）
+    public static void channelDataTrans() throws IOException {
+        long start = System.currentTimeMillis();
+        FileChannel inChannel = FileChannel.open(Paths.get("1.jpg"), StandardOpenOption.READ);
+        FileChannel outChannel = FileChannel.open(Paths.get("4.jpg"), StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.CREATE_NEW);
+
+        inChannel.transferTo(0, inChannel.size(), outChannel);
+        inChannel.close();
+        outChannel.close();
+        long end = System.currentTimeMillis();
+        System.out.println("直接缓冲区方式-通道数据传输数据复制文件-总耗费时间为：" + (end - start));
+    }
 
     // 使用直接缓冲区完成文件的复制（内存映射文件）
     public static void copyFileByMappedByteBuffer() throws IOException {
