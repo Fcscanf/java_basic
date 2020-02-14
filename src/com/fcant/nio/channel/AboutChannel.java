@@ -1,8 +1,6 @@
 package com.fcant.nio.channel;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -42,15 +40,44 @@ import java.nio.file.StandardOpenOption;
  * transferFrom()
  * transferTo()
  *
+ * 五、分散（Scatter）与聚集（Gather）
+ * 分散读取（Scattering Reads）：将通道中的数据分散到多个缓冲区中
+ * 聚集写入（Gathering Writes）：将多个缓冲区中的数据聚集到通道中
  *
  * @author Fcant 下午 20:02:38 2020/2/11/0011
  */
 public class AboutChannel {
 
     public static void main(String[] args) throws IOException {
-        copyFileByChannel();
-        copyFileByMappedByteBuffer();
-        channelDataTrans();
+        scatterAndGather();
+    }
+
+    /**
+     * 分散和聚集
+     *
+     * @author Fcant 下午 21:31:30 2020/2/14/0014
+     */
+    public static void scatterAndGather() throws IOException {
+        RandomAccessFile randomAccessFile = new RandomAccessFile("1.txt", "rw");
+        // 1.获取通道
+        FileChannel fileChannel = randomAccessFile.getChannel();
+        // 2.分配指定大小的缓冲区
+        ByteBuffer byteBuffer = ByteBuffer.allocate(100);
+        ByteBuffer byteBuffer1 = ByteBuffer.allocate(1024);
+        // 3.分散读取
+        ByteBuffer[] buffers = {byteBuffer, byteBuffer1};
+        fileChannel.read(buffers);
+        for (ByteBuffer buffer : buffers) {
+            buffer.flip();
+        }
+        System.out.println(new String(buffers[0].array(), 0, buffers[0].limit()));
+        System.out.println("------------------");
+        System.out.println(new String(buffers[1].array(), 0, buffers[1].limit()));
+
+        // 4.聚集写入
+        RandomAccessFile accessFile = new RandomAccessFile("2.txt", "rw");
+        FileChannel accessFileChannel = accessFile.getChannel();
+        accessFileChannel.write(buffers);
     }
 
     // 通道之间的数据传输（直接缓冲区）
