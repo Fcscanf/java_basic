@@ -54,7 +54,8 @@ public class AboutChannel {
         FileChannel inChannel = FileChannel.open(Paths.get("1.jpg"), StandardOpenOption.READ);
         FileChannel outChannel = FileChannel.open(Paths.get("4.jpg"), StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.CREATE_NEW);
 
-        inChannel.transferTo(0, inChannel.size(), outChannel);
+        // inChannel.transferTo(0, inChannel.size(), outChannel);
+        outChannel.transferFrom(inChannel, 0, inChannel.size());
         inChannel.close();
         outChannel.close();
         long end = System.currentTimeMillis();
