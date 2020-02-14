@@ -38,6 +38,11 @@ import java.nio.file.StandardOpenOption;
  * 2、在jdk7中的NIO.2针对各个通道提供了静态方法open()
  * 3、在jdk7中的NIO.2的File工具类的newByteChannel()
  *
+ * 四、通道之间的数据传输
+ * transferFrom()
+ * transferTo()
+ *
+ *
  * @author Fcant 下午 20:02:38 2020/2/11/0011
  */
 public class AboutChannel {
