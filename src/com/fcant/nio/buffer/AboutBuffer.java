@@ -38,6 +38,13 @@ import java.nio.ByteBuffer;
  */
 public class AboutBuffer {
 
+    public static void directBuffer() {
+        // 分配直接缓冲区
+        ByteBuffer allocateDirect = ByteBuffer.allocateDirect(1024);
+        // 判断是否为直接缓冲区
+        System.out.println(allocateDirect.isDirect());
+    }
+
     public static void bufferMark() {
         String str = "abcde";
         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
@@ -120,6 +127,8 @@ public class AboutBuffer {
         aboutByteBuffer();
         System.out.println("------------BufferMark----------");
         bufferMark();
+        System.out.println("----------------直接缓冲区--------------");
+        directBuffer();
     }
 
 }
