@@ -53,7 +53,7 @@ public class AboutChannel {
     }
 
     /**
-     * 分散和聚集
+     * 分散读取和聚集写入
      *
      * @author Fcant 下午 21:31:30 2020/2/14/0014
      */
