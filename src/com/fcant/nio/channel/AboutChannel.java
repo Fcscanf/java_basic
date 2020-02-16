@@ -1,11 +1,21 @@
 package com.fcant.nio.channel;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * AboutChannel
@@ -44,12 +54,62 @@ import java.nio.file.StandardOpenOption;
  * 分散读取（Scattering Reads）：将通道中的数据分散到多个缓冲区中
  * 聚集写入（Gathering Writes）：将多个缓冲区中的数据聚集到通道中
  *
+ * 六、字符集
+ * 编码：字符串 -> 字节数组
+ * 解码：字节数组 -> 字符串
+ *
  * @author Fcant 下午 20:02:38 2020/2/11/0011
  */
 public class AboutChannel {
 
     public static void main(String[] args) throws IOException {
-        scatterAndGather();
+        aboutCharSet();
+        System.out.println("----------编码和解码--------");
+        charSetEncodeDeCode();
+    }
+
+    /**
+     * 编码以及解码示例
+     *
+     * @author Fcant 下午 21:03:45 2020/2/16/0016
+     */
+    public static void charSetEncodeDeCode() throws CharacterCodingException {
+        Charset charset = Charset.forName("GBK");
+        // 获取编码器
+        CharsetEncoder charsetEncoder = charset.newEncoder();
+        // 获取解码器
+        CharsetDecoder charsetDecoder = charset.newDecoder();
+        CharBuffer charBuffer = CharBuffer.allocate(1024);
+        charBuffer.put("樊乘乘");
+        charBuffer.flip();
+        // 编码
+        ByteBuffer byteBuffer = charsetEncoder.encode(charBuffer);
+        for (int i = 1; i < 7; i++) {
+            System.out.println(byteBuffer.get());
+        }
+        // 解码
+        byteBuffer.flip();
+        CharBuffer decode = charsetDecoder.decode(byteBuffer);
+        System.out.println(decode.toString());
+
+        System.out.println("-----------------以UTF-8编码格式进行解码----------------");
+        Charset charsetUTF8 = Charset.forName("UTF-8");
+        byteBuffer.flip();
+        CharBuffer charBufferUTF8 = charsetUTF8.decode(byteBuffer);
+        System.out.println(charBufferUTF8.toString());
+    }
+
+    /**
+     * 字符集
+     *
+     * @author Fcant 下午 20:32:16 2020/2/15/0015
+     */
+    public static void aboutCharSet() {
+        Map<String, Charset> charsetMap = Charset.availableCharsets();
+        Set<Map.Entry<String, Charset>> entrySet = charsetMap.entrySet();
+        for (Map.Entry<String, Charset> stringCharsetEntry : entrySet) {
+            System.out.println(stringCharsetEntry.getKey() + "=" + stringCharsetEntry.getValue());
+        }
     }
 
     /**
