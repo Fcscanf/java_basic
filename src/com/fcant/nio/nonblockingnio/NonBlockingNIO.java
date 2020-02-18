@@ -34,7 +34,8 @@ import java.util.Scanner;
  */
 public class NonBlockingNIO {
 
-    // DatagramChannel示例
+    // DatagramChannel实现聊天室示例
+
     @Test
     public void send() throws IOException {
         DatagramChannel datagramChannel = DatagramChannel.open();
