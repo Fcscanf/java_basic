@@ -35,6 +35,54 @@ import java.nio.file.StandardOpenOption;
  */
 public class BlockingNIO {
 
+    // 文件从服务端发送至客户端并返回接收信息
+
+    @Test
+    public void clientSendImageReceiveMessageTest() throws IOException {
+        SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 9889));
+        FileChannel fileChannel = FileChannel.open(Paths.get("2.jpg"), StandardOpenOption.READ);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        while (fileChannel.read(byteBuffer) != -1) {
+            byteBuffer.flip();
+            socketChannel.write(byteBuffer);
+            byteBuffer.clear();
+        }
+        // 告诉客户端已发送结束，否则服务端一直在等待以至于发生服务端接收阻塞
+        socketChannel.shutdownOutput();
+        // 接收服务端的反馈
+        int length = 0;
+        while ((length = socketChannel.read(byteBuffer)) != -1) {
+            byteBuffer.flip();
+            System.out.println(new String(byteBuffer.array(), 0, length));
+            byteBuffer.clear();
+        }
+        fileChannel.close();
+        socketChannel.close();
+    }
+
+    @Test
+    public void serverReceiveImageTest() throws IOException {
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        FileChannel fileChannel = FileChannel.open(Paths.get("3.jpg"), StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+        serverSocketChannel.bind(new InetSocketAddress(9889));
+        SocketChannel socketChannel = serverSocketChannel.accept();
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        while (socketChannel.read(byteBuffer) != -1) {
+            byteBuffer.flip();
+            fileChannel.write(byteBuffer);
+            byteBuffer.clear();
+        }
+        // 发送反馈给客户端
+        byteBuffer.put("服务端接收数据成功".getBytes());
+        byteBuffer.flip();
+        socketChannel.write(byteBuffer);
+        socketChannel.close();
+        fileChannel.close();
+        serverSocketChannel.close();
+    }
+
+     // 文件从客户端发送至服务端
+
     @Test
     public void clientTest() throws IOException {
         // 1.获取通道
