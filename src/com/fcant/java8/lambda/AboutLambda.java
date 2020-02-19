@@ -2,20 +2,116 @@ package com.fcant.java8.lambda;
 
 import com.fcant.java8.lambda.bean.Employee;
 import com.fcant.java8.lambda.inter.ExPredicate;
+import com.fcant.java8.lambda.inter.Fun;
 import com.fcant.java8.lambda.inter.impl.FilterEmployeeByAge;
 import com.fcant.java8.lambda.inter.impl.FilterEmployeeBySalary;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * AboutLambda
  * <p>
  * encoding:UTF-8
  *
+ * 一、Lambda表达式的基础语法：Java8中引入了一个新的操作符"->"该操作符称为箭头操作符或者Lambda操作符
+ *      箭头操作符将Lambda表达式拆分成两部分
+ * 1.左侧：Lambda表达式的参数列表
+ * 2.右侧：Lambda表达式中所需执行的功能，即Lambda体
+ *
+ * 语法格式一：无参数，无返回值
+ *      () -> System.out.println("Hello Lambda!")
+ *
+ * 语法格式二：有一个参数，无返回值
+ *      (x) -> System.out.println(x);
+ *
+ * 语法格式三：有一个参数，无返回值时小括号可以省略不写
+ *      x -> System.out.println(x);
+ *
+ * 语法格式四：有一个或多个参数，有返回值，有多条处理语句
+ *      Comparator<Integer> comparator = (x, y) -> {
+ *          System.out.println("函数式接口");
+ *          return Integer.compare(x, y);
+ *      };
+ *
+ * 语法格式五：若Lambda体中只有一条语句，return和大括号都可以不写
+ *      (x, y) -> Integer.compare(x, y);
+ *
+ * 语法格式六：Lambda表达式的参数列表的数据类型可以省略不写，因为JVM编译器通过上下文推断出，数据类型，即“类型推断”
+ *      (Integer x, Integer y) -> Integer.compare(x, y);
+ *
+ * 二、Lambda表达式需要“函数式接口”的支持
+ * 函数式接口：接口中只有一个抽象方法的接口，称为函数式接口。
+ *      可以使用注解@FunctionalInterface 添加在该接口类上进行修饰
+ *      可以检查是否是函数式接口
+ *
  * @author Fcant 下午 21:10:08 2020/2/18/0018
  */
 public class AboutLambda {
+
+    // 函数式接口使用
+    @Test
+    public void funTest() {
+        Integer op = op(1000, (x) -> x * x);
+        System.out.println(op);
+    }
+
+    public Integer op(Integer in, Fun<Integer> fun) {
+        return fun.getValue(in);
+    }
+
+    // 6.Lambda表达式的参数列表的数据类型可以省略不写
+    @Test
+    public void paramTypeReturnLostTest() {
+        Comparator<Integer> comparator = (Integer x, Integer y) -> Integer.compare(x, y);
+        System.out.println(comparator.compare(1, 12));
+    }
+
+    // 5.只有一条语句，return和大括号都可以不写
+    @Test
+    public void paramReturnLostTest() {
+        Comparator<Integer> comparator = (x, y) -> Integer.compare(x, y);
+        System.out.println(comparator.compare(1, 12));
+    }
+
+    // 4.有一个或多个参数，有返回值，有多条处理语句
+    @Test
+    public void paramReturnTest() {
+        Comparator<Integer> comparator = (x, y) -> {
+            return Integer.compare(x, y);
+        };
+        System.out.println(comparator.compare(1, 12));
+    }
+
+    // 3.有一个参数，无返回值时可以省略括号
+    @Test
+    public void oneParamNoReturnLostTest() {
+        Consumer<String> consumer = x -> System.out.println(x);
+        consumer.accept("Fv");
+    }
+
+    // 2.有一个参数，无返回值
+    @Test
+    public void oneParamNoReturnTest() {
+        Consumer<String> consumer = (x) -> System.out.println(x);
+        consumer.accept("Fv");
+    }
+
+    // 1.无参数，无返回值
+    @Test
+    public void noParamNoReturnTest() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Hello World");
+            }
+        };
+        runnable.run();
+        System.out.println("---------Lambda实现--------");
+        Runnable r = () -> System.out.println("Hello Lambda!");
+        r.run();
+    }
 
     // 原来的匿名内部类
     @Test
