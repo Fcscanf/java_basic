@@ -3,6 +3,8 @@ package com.fcant.java8.lambda;
 import com.fcant.java8.lambda.bean.Employee;
 import com.fcant.java8.lambda.inter.ExPredicate;
 import com.fcant.java8.lambda.inter.Fun;
+import com.fcant.java8.lambda.inter.Func;
+import com.fcant.java8.lambda.inter.Funca;
 import com.fcant.java8.lambda.inter.impl.FilterEmployeeByAge;
 import com.fcant.java8.lambda.inter.impl.FilterEmployeeBySalary;
 import org.junit.Test;
@@ -49,6 +51,51 @@ import java.util.function.Consumer;
  * @author Fcant 下午 21:10:08 2020/2/18/0018
  */
 public class AboutLambda {
+
+    // Lambda练习小例子
+
+    // 案例1
+    // 调用Collection.sort(),通过定制排序比较两个Employee（先按年龄比，年龄相同按姓名比，使用Lambda作为参数传递）
+    @Test
+    public void empTest() {
+        Collections.sort(employees, (e1, e2) -> {
+            if (e1.getAge() == e2.getAge()) {
+                return e1.getName().compareTo(e2.getName());
+            } else {
+                return -Integer.compare(e1.getAge(), e2.getAge());
+            }
+        });
+        employees.forEach(System.out::println);
+    }
+
+    // 案例二
+    // ①声明函数式接口，接口中声明抽象方法，public String getValue（String str）；
+    // ②声明类TestLambda，类中编写方法使用接口作为参数，将一个字符串转换成大写，并作为方法的返回值。
+    // ③再将一个字符串的第二个和第四个索引位置进行截取子串
+    @Test
+    public void functionTest() {
+        System.out.println(option("agHdfC", (x) -> x.toUpperCase()));
+        System.out.println(option("hsafdsfh", (x) -> x.substring(2, 5)));
+    }
+
+    public String option(String s, Func<String> func) {
+        return func.getValue(s);
+    }
+
+    // 案例三
+    // ①声明一个带两个泛型的函数式接口，泛型类型为<T, R>,T为参数，R为返回值
+    // ②接口中声明对应的抽象方法
+    // ③在TestLambda类中声明方法，使用接口作为参数，计算两个long型参数的和
+    // ④再计算两个long型参数的乘积
+    @Test
+    public void trTest() {
+        System.out.println(ops(12l, 56l, (t1, t2) -> t1 + t2));
+        System.out.println(ops(12l, 56l, (t1, t2) -> t1 * t2));
+    }
+
+    public Long ops(Long t1, Long t2, Funca<Long, Long> funca) {
+        return funca.op(t1, t2);
+    }
 
     // 函数式接口使用
     @Test
