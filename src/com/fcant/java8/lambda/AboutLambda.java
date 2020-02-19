@@ -11,6 +11,9 @@ import org.junit.Test;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * AboutLambda
@@ -48,9 +51,78 @@ import java.util.function.Consumer;
  *      可以使用注解@FunctionalInterface 添加在该接口类上进行修饰
  *      可以检查是否是函数式接口
  *
+ * 三、Java8内置四大核心函数式接口
+ * Consumer<T> :消费型接口
+ *      void accept(T t);
+ *
+ * Supplier<T> :供给型接口
+ *      T get();
+ *
+ * Function<T, R> :函数型接口
+ *      R apply(T t);
+ *
+ * Predicate<T> :断言型接口
+ *      boolean test(T t);
+ *
+ *
+ *
+ *
  * @author Fcant 下午 21:10:08 2020/2/18/0018
  */
 public class AboutLambda {
+
+    // Java8四大核心函数接口
+    // 1.Consumer<T> :消费型接口
+    public void happyTest(double money, Consumer<Double> consumer) {
+        consumer.accept(money);
+    }
+
+    @Test
+    public void consumerTest() {
+        happyTest(1000d, (x) -> System.out.println("本次消费：" + x + "元"));
+    }
+
+    // 2.Supplier<T> :供给型接口
+    public List<Integer> getNumList(int n, Supplier<Integer> supplier) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            Integer num = supplier.get();
+            list.add(num);
+        }
+        return list;
+    }
+
+    @Test
+    public void supplierTest() {
+        getNumList(10, () -> (int)(Math.random() * 100)).forEach(System.out::println);
+    }
+
+    // 3.Function<T, R> :函数型接口
+    public String strHandler(String s, Function<String, String> function) {
+        return function.apply(s);
+    }
+
+    @Test
+    public void strTest() {
+        System.out.println(strHandler("gh", (s) -> s.toUpperCase()));
+    }
+
+    // 4.Predicate<T> :断言型接口
+    public List<String> filterStr(List<String> list, Predicate<String> predicate) {
+        List<String> strings = new ArrayList<>();
+        for (String s : list) {
+            if (predicate.test(s)) {
+                strings.add(s);
+            }
+        }
+        return strings;
+    }
+
+    @Test
+    public void strFilterTest() {
+        List<String> stringList = Arrays.asList("Hello", "Fcant", "Lambda", "ww", "ok");
+        filterStr(stringList, (s) -> s.length() > 3).forEach(System.out::println);
+    }
 
     // Lambda练习小例子
 
