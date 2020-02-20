@@ -12,6 +12,10 @@ public class Employee {
     private int age;
     private double salary;
 
+    public Employee(String name) {
+        this.name = name;
+    }
+
     public Employee() {
     }
 
