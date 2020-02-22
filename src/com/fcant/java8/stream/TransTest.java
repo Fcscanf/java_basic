@@ -1,7 +1,7 @@
 package com.fcant.java8.stream;
 
-import com.fcant.java8.lambda.bean.Trader;
-import com.fcant.java8.lambda.bean.Transaction;
+import com.fcant.java8.stream.bean.Trader;
+import com.fcant.java8.stream.bean.Transaction;
 import org.junit.Before;
 import org.junit.Test;
 

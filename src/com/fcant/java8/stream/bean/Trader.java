@@ -1,4 +1,4 @@
-package com.fcant.java8.lambda.bean;
+package com.fcant.java8.stream.bean;
 
 /**
  * Trader
