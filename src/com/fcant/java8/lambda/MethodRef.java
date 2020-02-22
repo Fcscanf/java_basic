@@ -93,7 +93,7 @@ public class MethodRef {
         stringConsumer.accept("使用同类型的方法进行引用实现");
 
         // getName()是employee对象的实例方法
-        Employee employee = new Employee("Fcant", 16, 1600);
+        Employee employee = new Employee("Fcant", 16, 1600d);
         Supplier<String> stringSupplier = employee::getName;
         System.out.println(stringSupplier.get());
     }

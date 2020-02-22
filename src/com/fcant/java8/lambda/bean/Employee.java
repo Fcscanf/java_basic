@@ -1,5 +1,7 @@
 package com.fcant.java8.lambda.bean;
 
+import java.util.Objects;
+
 /**
  * Employee
  * <p>
@@ -9,20 +11,43 @@ package com.fcant.java8.lambda.bean;
  */
 public class Employee {
     private String name;
-    private int age;
-    private double salary;
+    private Integer age;
+    private Double salary;
+    private Status status;
 
     public Employee(String name) {
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return age == employee.age &&
+                Double.compare(employee.salary, salary) == 0 &&
+                Objects.equals(name, employee.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age, salary);
+    }
+
     public Employee() {
     }
 
-    public Employee(String name, int age, double salary) {
+    public Employee(String name, Integer age, Double salary) {
         this.name = name;
         this.age = age;
         this.salary = salary;
+    }
+
+    public Employee(String name, Integer age, Double salary, Status status) {
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.status = status;
     }
 
     public String getName() {
@@ -33,20 +58,28 @@ public class Employee {
         this.name = name;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
-    public double getSalary() {
+    public Double getSalary() {
         return salary;
     }
 
-    public void setSalary(double salary) {
+    public void setSalary(Double salary) {
         this.salary = salary;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
@@ -55,6 +88,13 @@ public class Employee {
                 "name='" + name + '\'' +
                 ", age=" + age +
                 ", salary=" + salary +
+                ", status=" + status +
                 '}';
+    }
+
+    public enum Status{
+        FREE,
+        BUSY,
+        VOCATION;
     }
 }
