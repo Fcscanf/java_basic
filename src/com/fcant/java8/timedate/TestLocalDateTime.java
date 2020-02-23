@@ -3,6 +3,7 @@ package com.fcant.java8.timedate;
 import org.junit.Test;
 
 import java.time.*;
+import java.time.temporal.TemporalAdjusters;
 
 /**
  * TestLocalDateTime
@@ -12,6 +13,33 @@ import java.time.*;
  * @author Fcant 下午 19:22:26 2020/2/23/0023
  */
 public class TestLocalDateTime {
+
+    // TemporalAdjuster ： 时间校正器
+    @Test
+    public void temporalAdjusterTest() {
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now);
+
+        LocalDateTime localDateTime = now.withDayOfMonth(10);
+        System.out.println(localDateTime);
+
+        LocalDateTime friday = now.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
+        System.out.println(friday);
+
+        // 自定义：下一个工作日
+        LocalDateTime nextWorkDay = now.with((d) -> {
+            LocalDateTime dateTime = (LocalDateTime) d;
+            DayOfWeek dayOfWeek = dateTime.getDayOfWeek();
+            if (dayOfWeek.equals(DayOfWeek.FRIDAY)) {
+                return dateTime.plusDays(3);
+            } else if (dateTime.equals(DayOfWeek.FRIDAY)) {
+                return dateTime.plusDays(2);
+            } else {
+                return dateTime.plusDays(1);
+            }
+        });
+        System.out.println(nextWorkDay);
+    }
 
     /**
      * 3.时间计算
