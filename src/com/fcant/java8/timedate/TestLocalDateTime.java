@@ -3,6 +3,7 @@ package com.fcant.java8.timedate;
 import org.junit.Test;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 
 /**
@@ -13,6 +14,27 @@ import java.time.temporal.TemporalAdjusters;
  * @author Fcant 下午 19:22:26 2020/2/23/0023
  */
 public class TestLocalDateTime {
+
+    // DateTimeFormatter:格式化时间日期
+    @Test
+    public void dateTimeFormatterTest() {
+        // 使用官方提供的格式
+        DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_DATE;
+        LocalDateTime now = LocalDateTime.now();
+
+        String formatDate = now.format(ISO_DATE);
+        System.out.println(formatDate);
+
+        // 自定义格式
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss");
+        String selfDate = dateTimeFormatter.format(now);
+        System.out.println(selfDate);
+
+        // 字符串日期转回日期类型
+        LocalDateTime parseDate = now.parse(selfDate, dateTimeFormatter);
+        System.out.println(parseDate);
+    }
+
 
     // TemporalAdjuster ： 时间校正器
     @Test
