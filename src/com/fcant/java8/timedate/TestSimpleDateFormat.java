@@ -1,8 +1,9 @@
 package com.fcant.java8.timedate;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -16,18 +17,19 @@ import java.util.concurrent.*;
 public class TestSimpleDateFormat {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-mm-dd");
-        Callable<Date> task = new Callable<Date>() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        Callable<LocalDate> task = new Callable<LocalDate>() {
             @Override
-            public Date call() throws Exception {
-                return DateFormatThreadLocal.convert("2020-02-23");
+            public LocalDate call() throws Exception {
+                return LocalDate.parse("20200223", dateTimeFormatter);
             }
         };
         ExecutorService pool = Executors.newFixedThreadPool(10);
-        List<Future<Date>> futures = new ArrayList<>();
+        List<Future<LocalDate>> futures = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             futures.add(pool.submit(task));
         }
-        for (Future<Date> future : futures) {
+        for (Future<LocalDate> future : futures) {
             System.out.println(future.get());
         }
         pool.shutdown();
