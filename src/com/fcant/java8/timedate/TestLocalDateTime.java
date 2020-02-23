@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Set;
 
 /**
  * TestLocalDateTime
@@ -14,6 +15,22 @@ import java.time.temporal.TemporalAdjusters;
  * @author Fcant 下午 19:22:26 2020/2/23/0023
  */
 public class TestLocalDateTime {
+
+    // ZoneDate、ZoneTime、ZoneDateTime
+    @Test
+    public void zoneDateTimeTest() {
+        Set<String> availableZoneIds = ZoneId.getAvailableZoneIds();
+        availableZoneIds.forEach(System.out::println);
+
+        // 根据指定时区获取当前时间
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Africa/Nairobi"));
+        System.out.println(now);
+
+        // 获取时间并为之指定时区
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("US/Pacific"));
+        System.out.println(zonedDateTime);
+    }
 
     // DateTimeFormatter:格式化时间日期
     @Test
