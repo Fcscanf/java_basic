@@ -1,6 +1,9 @@
 package com.fcant.java8.optional;
 
 import com.fcant.java8.lambda.bean.Employee;
+import com.fcant.java8.optional.bean.Godness;
+import com.fcant.java8.optional.bean.Man;
+import com.fcant.java8.optional.bean.NewMan;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -55,5 +58,31 @@ public class OptionalTest {
         // flatMap要求必须返回是Optional
         Optional<String> optionalS = objectOptional.flatMap(e -> Optional.of(e.getName()));
         System.out.println(optionalS.get());
+    }
+
+    // 练习案例
+    // 需求：获取一个男人心中女神的名字
+    public String getGodnessName(Man man) {
+        if (man != null) {
+            Godness godness = man.getGodness();
+            if (godness != null) {
+                return godness.getName();
+            }
+        }
+        return "苍井空";
+    }
+
+    public String getGodnessName(Optional<NewMan> newMan) {
+        return newMan.orElse(new NewMan())
+                .getGodness()
+                .orElse(new Godness("苍井空"))
+                .getName();
+    }
+
+    @Test
+    public void Test() {
+        Optional<NewMan> newMan = Optional.empty();
+        String godnessName = getGodnessName(newMan);
+        System.out.println(godnessName);
     }
 }
