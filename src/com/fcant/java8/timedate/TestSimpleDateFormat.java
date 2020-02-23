@@ -19,7 +19,7 @@ public class TestSimpleDateFormat {
         Callable<Date> task = new Callable<Date>() {
             @Override
             public Date call() throws Exception {
-                return simpleDateFormat.parse("2020-02-23");
+                return DateFormatThreadLocal.convert("2020-02-23");
             }
         };
         ExecutorService pool = Executors.newFixedThreadPool(10);
@@ -30,5 +30,6 @@ public class TestSimpleDateFormat {
         for (Future<Date> future : futures) {
             System.out.println(future.get());
         }
+        pool.shutdown();
     }
 }
