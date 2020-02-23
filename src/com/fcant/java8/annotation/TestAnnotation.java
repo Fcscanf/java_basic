@@ -25,7 +25,7 @@ public class TestAnnotation {
 
     @Anno("Hello")
     @Anno("World")
-    public void show() {
+    public void show(@Anno("abc") String name) {
 
     }
 }
