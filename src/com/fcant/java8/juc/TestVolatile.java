@@ -15,9 +15,11 @@ public class TestVolatile {
         new Thread(fh).start();
 
         while (true) {
-            if (fh.isFlag()) {
-                System.out.println("-----------------");
-                break;
+            synchronized (fh) {
+                if (fh.isFlag()) {
+                    System.out.println("-----------------");
+                    break;
+                }
             }
         }
     }
