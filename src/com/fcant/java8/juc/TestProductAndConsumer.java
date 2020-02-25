@@ -15,6 +15,9 @@ public class TestProductAndConsumer {
 
         new Thread(product, "生产者A").start();
         new Thread(consumer, "消费者B").start();
+
+        new Thread(product, "生产者C").start();
+        new Thread(consumer, "消费者D").start();
     }
 }
 
@@ -24,32 +27,30 @@ class Clerk{
 
     // 进货
     public synchronized void get() {
-        if (product >= 10) {
+        while (product >= 1) {
             System.out.println("仓库已满，无法进货！");
             try {
                 this.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        } else {
-            System.out.println(Thread.currentThread().getName() + " : " + ++product);
-            this.notifyAll();
         }
+        System.out.println(Thread.currentThread().getName() + " : " + ++product);
+        this.notifyAll();
     }
 
     // 卖货
     public synchronized void sale() {
-        if (product <= 0) {
+        while (product <= 0) {
             try {
                 this.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             System.out.println("缺货中···");
-        } else {
-            System.out.println(Thread.currentThread().getName() + " : " + --product);
-            this.notifyAll();
         }
+        System.out.println(Thread.currentThread().getName() + " : " + --product);
+        this.notifyAll();
     }
 }
 
@@ -64,6 +65,11 @@ class Product implements Runnable{
     @Override
     public void run() {
         for (int i = 0; i < 20; i++) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             clerk.get();
         }
     }
