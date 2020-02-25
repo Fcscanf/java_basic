@@ -1,5 +1,9 @@
 package com.fcant.java8.juc;
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * TestProductorAndConsumer
  * <p>
@@ -7,8 +11,8 @@ package com.fcant.java8.juc;
  *
  * @author Fcant 上午 10:46:52 2020/2/25/0025
  */
-public class TestProductAndConsumer {
-/*    public static void main(String[] args) {
+public class TestProductAndConsumerByLock {
+    public static void main(String[] args) {
         Clerk clerk = new Clerk();
         Product product = new Product(clerk);
         Consumer consumer = new Consumer(clerk);
@@ -25,32 +29,39 @@ public class TestProductAndConsumer {
 class Clerk{
     private int product = 0;
 
+    private Lock lock = new ReentrantLock();
+
+    private Condition condition = lock.newCondition();
+
     // 进货
-    public synchronized void get() {
-        while (product >= 1) {
-            System.out.println("仓库已满，无法进货！");
-            try {
-                this.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    public void get() {
+        lock.lock();
+        try {
+            while (product >= 1) {
+                System.out.println("仓库已满，无法进货！");
+                condition.signal();
             }
+            System.out.println(Thread.currentThread().getName() + " : " + ++product);
+            this.notifyAll();
+        }finally {
+            condition.signalAll();
         }
-        System.out.println(Thread.currentThread().getName() + " : " + ++product);
-        this.notifyAll();
     }
 
     // 卖货
     public synchronized void sale() {
-        while (product <= 0) {
-            try {
-                this.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        lock.lock();
+        try {
+            while (product <= 0) {
+                condition.signal();
+                System.out.println("缺货中···");
             }
-            System.out.println("缺货中···");
+            System.out.println(Thread.currentThread().getName() + " : " + --product);
+            condition.signalAll();
+        }finally {
+            lock.unlock();
         }
-        System.out.println(Thread.currentThread().getName() + " : " + --product);
-        this.notifyAll();
+
     }
 }
 
@@ -88,5 +99,5 @@ class Consumer implements Runnable{
         for (int i = 0; i < 20; i++) {
             clerk.sale();
         }
-    }*/
+    }
 }
