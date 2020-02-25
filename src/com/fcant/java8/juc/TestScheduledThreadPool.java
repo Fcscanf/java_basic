@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.concurrent.*;
 
 /**
- * TestSchuledThreadPool
+ * TestScheduledThreadPool
  * <p>
  * encoding:UTF-8
  *
